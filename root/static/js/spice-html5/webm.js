@@ -88,6 +88,7 @@ var EXPECTED_PACKET_DURATION                = 10;
 var GAP_DETECTION_THRESHOLD                 = 50;
 
 var SPICE_VP8_CODEC                         = 'video/webm; codecs="vp8"';
+var SPICE_VP9_CODEC                         = 'video/webm; codecs="vp9"';
 
 /*----------------------------------------------------------------------------
 **  EBML utility functions
@@ -467,7 +468,7 @@ webm_AudioTrackEntry.prototype =
     },
 }
 
-function webm_VideoTrackEntry(width, height)
+function webm_VideoTrackEntry(width, height, codec_type)
 {
     this.id = WEBM_TRACK_ENTRY;
     this.number = 1;
@@ -482,8 +483,15 @@ function webm_VideoTrackEntry(width, height)
     this.codec_decode_all = 0; // fixme - check
     this.seek_pre_roll = 0; // 80000000; // fixme - check
     this.codec_delay =   80000000; // Must match codec_private.preskip
-    this.codec_id = "V_VP8";
     this.video = new webm_Video(width, height);
+    if (codec_type == SPICE_VIDEO_CODEC_TYPE_VP8)
+    {
+        this.codec_id = "V_VP8";
+    }
+    else
+    {
+        this.codec_id = "V_VP9";
+    }
 }
 
 webm_VideoTrackEntry.prototype =

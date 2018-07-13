@@ -181,6 +181,23 @@
         }
     }
 
+    function toggle_console()
+    {
+        //var checkbox = document.getElementById('show_console');
+        var m = document.getElementById('message-div');
+
+        if (m.style.display == 'block')
+        {
+            m.style.display = 'none';
+        }
+        else
+        {
+            m.style.display = 'block';
+        }
+
+        window.addEventListener('resize', handle_resize);
+        resize_helper(sc);
+    }    
     var uri;
     if (window.location.protocol === "https:") {
         uri = 'wss://{{ ws_host }}:{{ ws_port }}/{{ ws_path }}';

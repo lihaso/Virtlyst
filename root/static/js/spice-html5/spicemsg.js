@@ -1296,3 +1296,47 @@ SpiceMsgPortInit.prototype =
         this.name = a.slice(offset, offset + namesize - 1);
     }
 }
+
+function SpiceMsgcDisplayPreferredCompression(compression)
+{
+    this.image_compression = compression;
+}
+
+SpiceMsgcDisplayPreferredCompression.prototype =
+{
+    to_buffer: function(a, at)
+    {
+        at = at || 0;
+        var dv = new SpiceDataView(a);
+        dv.setUint8(at, this.image_compression, true); at += 1;
+        return at;
+    },
+    buffer_size: function()
+    {
+        return 1;
+    }
+}
+
+function SpiceMsgcDisplayPreferredVideoCodecType(codecs)
+{
+    this.codecs = codecs;
+    this.num_of_codecs = codecs.length;
+}
+
+SpiceMsgcDisplayPreferredVideoCodecType.prototype =
+{
+    to_buffer: function(a, at)
+    {
+        at = at || 0;
+        var dv = new SpiceDataView(a);
+        dv.setUint8(at, this.num_of_codecs, true); at += 1;
+        for (var i = 0; i < this.codecs.length; i++)
+            dv.setUint8(at + i, this.codecs[i], true);
+        at += this.num_of_codecs;
+        return at;
+    },
+    buffer_size: function()
+    {
+        return this.num_of_codecs + 1;
+    }
+}

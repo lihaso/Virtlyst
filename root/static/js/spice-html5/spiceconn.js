@@ -147,6 +147,8 @@ SpiceConn.prototype =
                         (1 << SPICE_DISPLAY_CAP_CODEC_MJPEG);
             if ('MediaSource' in window && MediaSource.isTypeSupported(SPICE_VP8_CODEC))
                 caps |= (1 << SPICE_DISPLAY_CAP_CODEC_VP8);
+            if ('MediaSource' in window && MediaSource.isTypeSupported(SPICE_VP9_CODEC))
+                caps |= (1 << SPICE_DISPLAY_CAP_CODEC_VP9);
             msg.channel_caps.push(caps);
         }
 
@@ -243,6 +245,9 @@ SpiceConn.prototype =
         else if (this.state == "link")
         {
             this.reply_link = new SpiceLinkReply(mb);
+            this.common_caps = this.reply_link.common_caps;
+            this.channel_caps = this.reply_link.channel_caps;
+
              // FIXME - Screen the caps - require minihdr at least, right?
             if (this.reply_link.error)
             {
@@ -495,6 +500,22 @@ SpiceConn.prototype =
         var e = new Error("Connection timed out.");
         this.report_error(e);
     },
+
+    test_capability: function(caps, cap)
+    {
+        var ret = (caps >> cap).toString(2) & 1;
+        return ret;
+    },
+
+    channel_test_capability: function(cap)
+    {
+        return this.test_capability(this.channel_caps, cap);
+    },
+
+    channel_test_common_capability: function(cap)
+    {
+        return this.test_capability(this.common_caps, cap);
+    }
 }
 
 function spiceconn_timeout(sc)

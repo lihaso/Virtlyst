@@ -543,7 +543,8 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
         else
             this.streams[m.id] = m;
 
-        if (m.codec_type == SPICE_VIDEO_CODEC_TYPE_VP8)
+        if (m.codec_type == SPICE_VIDEO_CODEC_TYPE_VP8 ||
+            m.codec_type == SPICE_VIDEO_CODEC_TYPE_VP9)
         {
             var media = new MediaSource();
             var v = document.createElement("video");
@@ -606,7 +607,8 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
         if (this.streams[m.base.id].codec_type === SPICE_VIDEO_CODEC_TYPE_MJPEG)
             process_mjpeg_stream_data(this, m, time_until_due);
 
-        if (this.streams[m.base.id].codec_type === SPICE_VIDEO_CODEC_TYPE_VP8)
+        if (this.streams[m.base.id].codec_type === SPICE_VIDEO_CODEC_TYPE_VP8 ||
+            this.streams[m.base.id].codec_type == SPICE_VIDEO_CODEC_TYPE_VP9)
             process_video_stream_data(this.streams[m.base.id], m);
 
         return true;
@@ -640,7 +642,8 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
         var m = new SpiceMsgDisplayStreamDestroy(msg.data);
         STREAM_DEBUG > 0 && console.log(this.type + ": MsgStreamDestroy id" + m.id);
 
-        if (this.streams[m.id].codec_type == SPICE_VIDEO_CODEC_TYPE_VP8)
+        if (this.streams[m.id].codec_type == SPICE_VIDEO_CODEC_TYPE_VP8 ||
+            this.streams[m.id].codec_type == SPICE_VIDEO_CODEC_TYPE_VP9)
         {
             document.getElementById(this.parent.screen_id).removeChild(this.streams[m.id].video);
             this.streams[m.id].source_buffer = null;
@@ -1036,14 +1039,24 @@ function handle_video_source_open(e)
 {
     var stream = this.stream;
     var p = this.spiceconn;
+    var codec_type;
 
     if (stream.source_buffer)
         return;
 
-    var s = this.addSourceBuffer(SPICE_VP8_CODEC);
+    if (this.stream.codec_type == SPICE_VIDEO_CODEC_TYPE_VP8)
+    {
+        codec_type = SPICE_VP8_CODEC;
+    }
+    else
+    {
+        codec_type = SPICE_VP9_CODEC;
+    }
+
+    var s = this.addSourceBuffer(codec_type);
     if (! s)
     {
-        p.log_err('Codec ' + SPICE_VP8_CODEC + ' not available.');
+        p.log_err('Codec ' + codec_type + ' not available.');
         return;
     }
 
@@ -1054,7 +1067,8 @@ function handle_video_source_open(e)
     listen_for_video_events(stream);
 
     var h = new webm_Header();
-    var te = new webm_VideoTrackEntry(this.stream.stream_width, this.stream.stream_height);
+    var te = new webm_VideoTrackEntry(this.stream.stream_width, this.stream.stream_height,
+                                      this.stream.codec_type);
     var t = new webm_Tracks(te);
 
     var mb = new ArrayBuffer(h.buffer_size() + t.buffer_size())
@@ -1244,4 +1258,36 @@ function listen_for_video_events(stream)
         video_1_events.forEach(video_debug_listen_for_one_event, stream.video);
     if (STREAM_DEBUG > 1)
         video_2_events.forEach(video_debug_listen_for_one_event, stream.video);
+}
+
+SpiceDisplayConn.prototype.change_preferred_compression = function(compression_id)
+{
+    var ch = this.channel_type();
+    if (!this.channel_test_capability(SPICE_DISPLAY_CAP_PREF_COMPRESSION))
+    {
+        this.log_warn(ch + " does not have capability to change the preferred compression");
+        return;
+    }
+
+    var msg = new SpiceMiniData();
+    var compression = new SpiceMsgcDisplayPreferredCompression(compression_id);
+
+    msg.build_msg(SPICE_MSGC_DISPLAY_PREFERRED_COMPRESSION, compression);
+    this.send_msg(msg);
+}
+
+SpiceDisplayConn.prototype.change_preferred_video_codec_type = function(video_codecs)
+{
+    var ch = this.channel_type();
+    if (!this.channel_test_capability(SPICE_DISPLAY_CAP_PREF_VIDEO_CODEC_TYPE))
+    {
+        this.log_warn(ch + " does not have capability to change the preferred video codec type");
+        return;
+    }
+
+    var msg = new SpiceMiniData();
+    var video_codec_type = new SpiceMsgcDisplayPreferredVideoCodecType(video_codecs);
+
+    msg.build_msg(SPICE_MSGC_DISPLAY_PREFERRED_VIDEO_CODEC_TYPE, video_codec_type);
+    this.send_msg(msg);
 }
