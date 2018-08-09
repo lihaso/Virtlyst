@@ -10,7 +10,7 @@ Don't let your virtualization management use more resources than you main virtua
  
 # Screenshot
 
-![Instances](http://i67.tinypic.com/161yn1d.png)
+![Instances & Connections](Screenshot.png)
 
 # Running
 
