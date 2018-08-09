@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{% i18n "Overview" %}{% endblock %}
 {% block content %}
-    {% include 'sidebar.html' %}
     <div class="main col-xs-12 col-sm-9">
         {% if errors %}
             {% for error in errors %}
@@ -52,7 +51,6 @@
         <p>{% i18n "Memory usage" %}</p>
         <canvas id="memoryChart" width="700" height="200"></canvas>
     </div>
-    {% include 'sidebar_close.html' %}
 {% endblock %}
 {% block script %}
     <script src="/static/js/Chart.min.js"></script>

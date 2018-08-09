@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{% i18n "Virtual Networks" %}{% endblock %}
 {% block content %}
-    {% include 'sidebar.html' %}
-    <div class="main col-xs-12 col-sm-9">
-        <div class="btn-group-sm">
-            <a href="#AddNetPool" class="btn btn-success" data-toggle="modal">{% i18n "New Network" %}</a>
-        </div>
+    <div class="row mb-4 align-items-center site-title">
         {% if errors %}
             {% for error in errors %}
                 <div class="alert alert-danger">
@@ -38,38 +34,47 @@
                 {% endfor %}
             </div>
         {% endif %}
+        <div class="col-auto">
+            <h1>{% i18n "Networks" %}</h1>
+        </div>
+        <div class="col">
+             <a data-toggle="modal" href="#AddNetPool" class="btn btn-success"><i class="fas fa-plus"></i></a> 
+        </div>
+    </div>
+    <div class="row">
         {% if not networks.size %}
             <div class="well">
                 <h4>{% i18n "You do not have any virtual networks" %}</h4>
             </div>
         {% else %}
-            <div class="row" role="main">
-                {% for pool in networks %}
-                    <div class="col-xs-12 col-sm-4">
-                        <div class="panel {% if pool.active %}panel-success{% else %}panel-danger{% endif %} panel-data">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><a href="/networks/{{ host_id }}/{{ pool.name }}">{{ pool.name }}</a></h3>
-                            </div>
-                            <div class="panel-body">
-                                <p>{% i18n "Device" %}: {{ pool.device }}{{ pool.bridgeName }}</p>
-
-                                <p>{% i18n "Forward" %}: {{ pool.forwardMode|upper }}</p>
+            {% for pool in networks %}
+                <div class="col-12 col-md-6 col-xl-4 mb-4">
+                    <div class="card card-data">
+                        <div class="card-header {% if pool.active %}alert-success{% else %}alert-danger{% endif %}">
+                            <div class="row">
+                                <div class="col ">
+                                    <strong><a class="{% if pool.active %}alert-success{% else %}alert-danger{% endif %}" href="/networks/{{ host_id }}/{{ pool.name }}">{{ pool.name }}</a></strong>
+                                </div>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <p>{% i18n "Device" %}: {{ pool.device }}{{ pool.bridgeName }}</p>
+
+                            <p>{% i18n "Forward" %}: {{ pool.forwardMode|upper }}</p>
+                        </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
         {% endif %}
     </div>
 
     <!-- Modal pool -->
-    <div class="modal fade" id="AddNetPool" tabindex="-1" role="dialog" aria-labelledby="AddNetPoolLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="AddNetPool" tabindex="-1" role="dialog" aria-labelledby="AddNetPoolLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">{% i18n "Add New Network" %}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fas fa-times"></i></button>
                 </div>
                 <form class="form-horizontal" method="post" action="" role="form">{{ csrf_token }}
                     <div class="form-group">
@@ -139,7 +144,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    {% include 'sidebar_close.html' %}
+
 {% endblock %}
 {% block script %}
     <script>

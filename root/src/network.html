@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{% i18n "Network Pool" %}{% endblock %}
 {% block content %}
-    {% include 'sidebar.html' %}
     <div class="main col-xs-12 col-sm-9">
         {% if errors %}
             {% for error in errors %}
@@ -27,12 +26,12 @@
                         <td>
                             <form action="" method="post" role="form">{{ csrf_token }}
                                 {% if not network.active %}
-                                    <input type="submit" class="btn btn-xs btn-default" name="start"
+                                    <input type="submit" class="btn btn-xs btn-success" name="start"
                                            value="{% i18n "Start" %}">
-                                    <input type="submit" class="btn btn-xs btn-default" name="delete"
+                                    <input type="submit" class="btn btn-xs btn-danger" name="delete"
                                            value="{% i18n "Delete" %}" onclick="return confirm('{% i18n "Are you sure?" %}')">
                                 {% else %}
-                                    <input type="submit" class="btn btn-xs btn-default" name="stop" value="{% i18n "Stop" %}"
+                                    <input type="submit" class="btn btn-xs btn-danger" name="stop" value="{% i18n "Stop" %}"
                                            onclick="return confirm('{% i18n "Are you sure?" %}')">
                                 {% endif %}
                             </form>
@@ -43,10 +42,10 @@
                         <td>
                             <form action="" method="post" role="form">{{ csrf_token }}
                                 {% if not network.autostart %}
-                                    <input type="submit" class="btn btn-xs btn-default" name="set_autostart"
+                                    <input type="submit" class="btn btn-xs btn-success" name="set_autostart"
                                            value="{% i18n "Enable" %}">
                                 {% else %}
-                                    <input type="submit" class="btn btn-xs btn-default" name="unset_autostart"
+                                    <input type="submit" class="btn btn-xs btn-danger" name="unset_autostart"
                                            onclick="return confirm('{% i18n "Are you sure?" %}')"
                                            value="{% i18n "Disable" %}">
                                 {% endif %}
@@ -80,13 +79,15 @@
                     </tr>
                     <tr>
                         <td>{% i18n "DHCP" %}</td>
-                        <td>
-                            {% if network.ipDhcpRangeStart and network.ipDhcpRangeEnd %}
-                                <span class="label label-success">{% i18n "ON" %}</span>
-                            {% else %}
-                                <span class="label label-danger">{% i18n "OFF" %}</span>
-                            {% endif %}
-                        </td>
+                        {% if network.ipDhcpRangeStart and network.ipDhcpRangeEnd %}
+                            <td class="alert-success">
+                                <strong class="alert-success">{% i18n "ON" %}</strong>
+                            </td>
+                        {% else %}
+                            <td class="alert-danger">
+                                <strong class="alert-danger">{% i18n "OFF" %}</strong>
+                            </td>
+                        {% endif %}
                     </tr>
                     {% if network.ipDhcpRangeStart and network.ipDhcpRangeEnd %}
                         <tr>
@@ -145,7 +146,6 @@
             {% endif %}
         {% endif %}
     </div>
-    {% include 'sidebar_close.html' %}
 {% endblock %}
 {% block script %}
     <script>

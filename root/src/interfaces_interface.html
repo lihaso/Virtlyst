@@ -1,0 +1,17 @@
+ <div class="col-12 col-md-6 col-xl-4 mb-4">
+    <div class="card card-data">
+        <div class="card-header {{ format }}">
+            <div class="row">
+                <div class="col ">
+                    <a  class="{{ format }}" href="/interfaces/{{ host_id }}/{{ iface.name }}"><i class="fas fa-plug mr-1"></i>
+                        <strong>{{ iface.name }}</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <p>{% i18n "Type" %}: {{ iface.type }}</p>
+            <p>{% i18n "MAC" %}: {{ iface.mac }}</p>
+        </div>
+    </div>
+</div>

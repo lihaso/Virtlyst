@@ -1,20 +1,35 @@
 {% extends "base_auth.html" %}
 {% block content %}
-    <div class="row">
-        <div class="col-xs-12" role="main">
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header  alert-success align-items-center">{% i18n "Sign In" %}</div>
+        <div class="card-body">
             {% if form.errors %}
-                <div class="alert alert-danger">
+                <div class="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 </div>
             {% endif %}
             <form class="form-signin" method="post" role="form">
-                <h2 class="form-signin-heading">{% i18n "Sign In" %}</h2>
-                <input type="text" class="form-control" name="username" placeholder="Login" autocapitalize="none"
-                       autocorrect="off" autofocus>
-                <input type="password" class="form-control" name="password" placeholder="Password">
-                <input name="next" id="next" type="hidden" value="{#% url 'servers_list' %}">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input class="form-control" id="username" type="text" aria-describedby="Login" name="username" placeholder="Login" autocapitalize="none" autocorrect="off" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input class="form-control" id="password" type="password" placeholder="Password" name="password" >
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox"> Remember Password</label>
+                    </div>
+                </div>
+                <input name="next" id="next" type="hidden" value="/server">
+                <!--a class="btn btn-primary btn-block" href="index.html">{% i18n "Sign In" %}</a-->
                 <button class="btn btn-lg btn-success btn-block" type="submit">{% i18n "Sign In" %}</button>
-            </form>
+            </form>        
         </div>
     </div>
 {% endblock %}
+
+                
+                

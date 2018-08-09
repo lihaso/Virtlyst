@@ -1,0 +1,183 @@
+ <div class="col-12 col-md-6 col-xl-4 mb-4">
+    <div class="card card-data">
+        <div class="card-header {{ format }}">
+            <div class="row">
+                <div class="col ">
+                    {% if host.alive %}
+                        <a class="{{ format }}" href="/instances/{{ host.id }}"><i class="fas fa-plug mr-1"></i>
+                    {% else %}
+                        <i class="fas fa-exclamation mr-1"></i>
+                    {% endif %}
+                    <strong>{{ host.name }}</strong>
+                    {% if host.alive %}
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-auto icon-bar">
+                    <a class="{{ format }}" data-toggle="modal" href="#editHost{{ host.id }}" title="{% i18n "Edit" %}"><i class="fas fa-edit"></i></a>
+                    <form action="" method="post" role="form">{{ csrf_token }}
+                        <input type="hidden" name="host_id" value="{{ host.id }}">
+                        <button type="submit" name="host_del" class="{{ format }}"
+                                title="{% i18n "Delete" %}"
+                                onclick="return confirm('{% i18n "Are you sure?" %}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>    
+        <div class="card-body">
+            <p><strong>{% i18n "Type" %}:</strong> [
+                {% if host.type == 1 %}
+                    TCP
+                {% elif host.type == 2 %}
+                    SSH
+                {% elif host.type == 3 %}
+                    TLS
+                {% elif host.type == 4 %}
+                    SOCKET
+                {% endif %} ]
+            </p>
+            <p><strong>{% i18n "Host" %}:</strong> <a
+                    href="ssh://{{ host.hostname }}" title="{{ host.status }}">{{ host.hostname }}</a></p>
+            <!-- Modal Edit -->
+            <div class="modal fade" id="editHost{{ host.id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="editHostLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">{% i18n "Edit Host Server" %}
+                                {% if host.type == 1 %}({% i18n "TCP" %})
+                                {% elif host.type == 2 %}({% i18n "SSH" %})
+                                {% elif host.type == 3 %}({% i18n "TLS" %})
+                                {% elif host.type == 4 %}({% i18n "SOCKET" %}){% endif %}
+                            </h4>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="tab-content">
+                            <form class="form-horizontal" method="post" role="form">{{ csrf_token }}
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">{% i18n "Label" %}</label>
+                                    <div class="col-sm-6">
+                                        <input type="hidden" name="host_id" value="{{ host.id }}">
+                                        <input type="text" name="name" class="form-control"
+                                                value="{{ host.name }}" maxlength="20" required
+                                                pattern="[a-z0-9\.\-_]+">
+                                    </div>
+                                </div>
+                                {% if host.type == 1 %}
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "FQDN / IP" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="text" name="hostname" class="form-control"
+                                                    value="{{ host.hostname }}" required
+                                                    pattern="[a-z0-9\.\-_]+">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "Username" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="text" name="login" class="form-control"
+                                                    value="{{ host.login }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "Password" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="password" name="password" class="form-control"
+                                                    value="{{ host.password }}">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">{% i18n "Close" %}</button>
+                                        <button type="submit" class="btn btn-primary"
+                                                name="host_edit">{% i18n "Edit" %}</button>
+                                    </div>
+                            {% elif host.type == 2 %}
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "FQDN / IP" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="text" name="hostname" class="form-control"
+                                                    value="{{ host.hostname }}" required
+                                                    pattern="[a-z0-9\:\.\-_]+">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "Username" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="text" name="login" class="form-control"
+                                                    value="{{ host.login }}">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">{% i18n "Close" %}</button>
+                                        <button type="submit" class="btn btn-primary"
+                                                name="host_edit">{% i18n "Edit" %}</button>
+                                    </div>
+                            {% elif host.type == 3 %}
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "Label" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="hidden" name="host_id" value="{{ host.id }}">
+                                            <input type="text" name="name" class="form-control"
+                                                    value="{{ host.name }}" maxlength="20" required
+                                                    pattern="[a-z0-9\.\-_]+">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "FQDN / IP" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="text" name="hostname" class="form-control"
+                                                    value="{{ host.hostname }}" required
+                                                    pattern="[a-z0-9\:\.\-_]+">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "Username" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="text" name="login" class="form-control"
+                                                    placeholder="{% i18n "Name" %}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">{% i18n "Password" %}</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="password" name="password" class="form-control"
+                                                    value="{{ host.password }}">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">{% i18n "Close" %}</button>
+                                        <button type="submit" class="btn btn-primary"
+                                                name="host_tls_add">{% i18n "Add" %}</button>
+                                    </div>
+                                {% elif host.type == 4 %}
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">{% i18n "Close" %}</button>
+                                    </div>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+</div>

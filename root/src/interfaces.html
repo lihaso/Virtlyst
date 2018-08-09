@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{% i18n "Interface" %}{% endblock %}
 {% block content %}
-    {% include 'sidebar.html' %}
-    <div class="main col-xs-12 col-sm-9">
+    <div class="row mb-4 align-items-center site-title">
         {% if errors %}
             {% for error in errors %}
                 <div class="alert alert-danger">
@@ -11,25 +10,33 @@
                 </div>
             {% endfor %}
         {% endif %}
-        <div class="btn-group-sm">
-            <a href="#AddInterface" class="btn btn-success" data-toggle="modal">{% i18n "New Interface" %}</a>
+        <div class="col-auto">
+            <h1>{% i18n "Interfaces" %}</h1>
         </div>
+        <div class="col">
+             <a data-toggle="modal" href="#AddInterface" class="btn btn-success"><i class="fas fa-plus"></i></a> 
+        </div>
+    </div>
+    <div class="row">
         {% if ifaces_all.size %}
-            <div class="row" role="main">
+            
             {% for iface in ifaces_all %}
-                <div class="col-xs-12 col-sm-4">
-                    <div class="panel {% if iface.active %}panel-success{% else %}panel-danger{% endif %} panel-data">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><a href="/interfaces/{{ host_id }}/{{ iface.name }}">{{ iface.name }}</a>
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <p>{% i18n "Type" %}: {{ iface.type }}</p>
-                            <p>{% i18n "MAC" %}: {{ iface.mac }}</p>
-                        </div>
-                    </div>
-                </div>
+                {% if iface.active %}
+                    {% with "alert-success" as format %}
+                        {% include 'interfaces_interface.html' %}
+                    {% endwith %}    
+                {% else %}    
+                    {% with "alert-danger" as format %}
+                        {% include 'interfaces_interface.html' %}
+                    {% endwith %}   
+                {% endif %}
             {% endfor %}
+            
+        {% else %}
+            <div class="col-sm-12">
+                <div class="well">
+                    <h4>{% i18n "You have no interfaces" %}</h4>
+                </div>
             </div>
         {% endif %}
     </div>
@@ -183,7 +190,6 @@
         </div>
         <!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    {% include 'sidebar_close.html' %}
 {% endblock %}
 {% block script %}
     <script>

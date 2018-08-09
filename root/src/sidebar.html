@@ -1,38 +1,35 @@
 <!--{ load tags_active %}-->
-<div class="row">
-    <div class="col-xs-12">
-        <div class="page-header">
-            <a href="/create/{{ host_id }}" class="btn btn-sm btn-success pull-right">{% i18n "New Instance" %}</a>
-            <h1><a href="/overview/{{ host_id }}">{{ host.name }}</a></h1>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="sidebar col-xs-12 col-sm-3">
-        <ul>
-            <li>
-                <a href="/instances/{{ host_id }}"
-                   class="list{% if c.namespace == 'instances' %} selected{% endif %}">{% i18n "Instances" %}</a>
-            </li>
-            <li>
-                <a href="/storages/{{ host_id }}"
-                   class="list{% if c.namespace == 'storages' %} selected{% endif %}">{% i18n "Storages" %}</a>
-            </li>
-            <li>
-                <a href="/networks/{{ host_id }}"
-                   class="list{% if c.namespace == 'networks' %} selected{% endif %}">{% i18n "Networks" %}</a>
-            </li>
-            <li>
-                <a href="/interfaces/{{ host_id }}"
-                   class="list{% if c.namespace == 'interfaces' %} selected{% endif %}">{% i18n "Interfaces" %}</a>
-            </li>
-            <li>
-                <a href="/secrets/{{ host_id }}"
-                   class="list{% if c.namespace == 'secrets' %} selected{% endif %}">{% i18n "Secrets" %}</a>
-            </li>
-            <li>
-                <a href="/overview/{{ host_id }}"
-                   class="list{% if c.namespace == 'overview' %} selected{% endif %}">{% i18n "Overview" %}</a>
-            </li>
-        </ul>
-    </div>
+{% if host_id %}
+<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
+    <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
+        <i class="fas fa-fw fa-chart-area"></i>
+        <span class="nav-link-text">{{ host.name }}</span>
+    </a>
+    <ul class="sidenav-second-level collapse show" id="collapseComponents"> 
+        <li>
+            <a href="/instances/{{ host_id }}"
+                class="list{% if c.namespace == 'instances' %} selected{% endif %}"><i class="fas fa-server mr-1"></i>{% i18n "Instances" %}</a>
+        </li>
+        <li>
+            <a href="/storages/{{ host_id }}"
+                class="list{% if c.namespace == 'storages' %} selected{% endif %}"><i class="fas fa-hdd mr-1"></i>{% i18n "Storages" %}</a>
+        </li>
+        <li>
+            <a href="/networks/{{ host_id }}"
+                class="list{% if c.namespace == 'networks' %} selected{% endif %}"><i class="fas fa-sitemap mr-1"></i>{% i18n "Networks" %}</a>
+        </li>
+        <li>
+            <a href="/interfaces/{{ host_id }}"
+                class="list{% if c.namespace == 'interfaces' %} selected{% endif %}"><i class="fas fa-wifi mr-1"></i>{% i18n "Interfaces" %}</a>
+        </li>
+        <li>
+            <a href="/secrets/{{ host_id }}"
+                class="list{% if c.namespace == 'secrets' %} selected{% endif %}"><i class="fas fa-key mr-1"></i>{% i18n "Secrets" %}</a>
+        </li>
+        <li>
+            <a href="/overview/{{ host_id }}"
+                class="list{% if c.namespace == 'overview' %} selected{% endif %}"><i class="fas fa-info mr-1"></i>{% i18n "Overview" %}</a>
+        </li>
+    </ul>
+</li>
+{% endif %}

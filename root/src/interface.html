@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{% i18n "Interface" %}{% endblock %}
 {% block content %}
-    {% include 'sidebar.html' %}
     <div class="main col-xs-12 col-sm-9">
         {% if errors %}
             {% for error in errors %}
@@ -48,11 +47,11 @@
                     <td>
                         <form action="" method="post" role="form">{{ csrf_token }}
                             {% if not iface.active %}
-                                <input type="submit" class="btn btn-xs btn-default" name="start" value="{% i18n "Start" %}">
-                                <input type="submit" class="btn btn-xs btn-default" name="delete" value="{% i18n "Delete" %}"
+                                <input type="submit" class="btn btn-xs btn-success" name="start" value="{% i18n "Start" %}">
+                                <input type="submit" class="btn btn-xs btn-danger" name="delete" value="{% i18n "Delete" %}"
                                        onclick="return confirm('{% i18n "Are you sure?" %}')">
                             {% else %}
-                                <input type="submit" class="btn btn-xs btn-default" name="stop" value="{% i18n "Stop" %}"
+                                <input type="submit" class="btn btn-xs btn-danger" name="stop" value="{% i18n "Stop" %}"
                                        onclick="return confirm('{% i18n "Are you sure?" %}')">
                             {% endif %}
                         </form>
@@ -61,5 +60,4 @@
             </tbody>
         </table>
     </div>
-    {% include 'sidebar_close.html' %}
 {% endblock %}

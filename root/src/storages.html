@@ -1,91 +1,92 @@
 {% extends "base.html" %}
 {% block title %}{% i18n "Storages" %}{% endblock %}
 {% block content %}
-    {% include 'sidebar.html' %}
-    <div class="main col-xs-12 col-sm-9">
-        <div class="btn-group-sm">
-            <a href="#AddStgPool" class="btn btn-success" data-toggle="modal">{% i18n "New Storage" %}</a>
-        </div>
-        {% if errors %}
-            {% for error in errors %}
-                <div class="alert alert-danger" style="margin-top:10px">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    {{ error }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% if form.name.errors %}
-            <div class="alert alert-danger" style="margin-top:10px">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                {% for error in form.name.errors %}
-                    {{ error }}
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% if form.target.errors %}
-            <div class="alert alert-danger" style="margin-top:10px">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                {% for error in form.target.errors %}
-                    {{ error }}
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% if form.source.errors %}
-            <div class="alert alert-danger" style="margin-top:10px">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                {% for error in form.source.errors %}
-                    {{ error }}
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% if not storages.size %}
-            <div class="well">
-                <h4>{% i18n "You do not have any storage pools" %}</h4>
-            </div>
-        {% else %}
-            <div class="row" role="main">
-                {% for pool in storages %}
-                    <div class="col-xs-12 col-sm-4">
-                        <div class="panel {% if pool.active %}panel-success{% else %}panel-danger{% endif %} panel-data">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><a href="/storages/{{ host_id }}/{{ pool.name }}">{{ pool.name }}</a></h3>
-                            </div>
-                            <div class="panel-body">
-                                <p>{% i18n "Type" %}: {{ pool.type|upper }}</p>
-
-                                <p>{% i18n "Size" %}: {{ pool.size }}<!--|filesizeformat--></p>
-
-                                <p>{% i18n "Volumes" %}: {{ pool.volumeCount }}</p>
-                            </div>
-                        </div>
+    <div class="main">
+        <div class="row mb-4 align-items-center site-title">
+            {% if errors %}
+                {% for error in errors %}
+                    <div class="alert alert-danger" style="margin-top:10px">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {{ error }}
                     </div>
                 {% endfor %}
+            {% endif %}
+            {% if form.name.errors %}
+                <div class="alert alert-danger" style="margin-top:10px">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {% for error in form.name.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if form.target.errors %}
+                <div class="alert alert-danger" style="margin-top:10px">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {% for error in form.target.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if form.source.errors %}
+                <div class="alert alert-danger" style="margin-top:10px">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {% for error in form.source.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="col-auto">
+                <h1>{% i18n "Storages" %}</h1>
             </div>
-        {% endif %}
+            <div class="col">
+                <a href="#AddStgPool" class="btn btn-success" data-toggle="modal"><i class="fas fa-plus"></i></a> 
+            </div>
+        </div>
+        <div class="section"> 
+            {% if not storages.size %}
+                <div class="well">
+                    <h4>{% i18n "You do not have any storage pools" %}</h4>
+                </div>
+            {% else %}
+                <div class="row" role="main">
+                    {% for pool in storages %}
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="card card-data">
+                                <div class="card-header {% if pool.active %}alert-success{% else %}alert-danger{% endif %}">
+                                    <a class="{% if pool.active %}alert-success{% else %}alert-danger{% endif %}" href="/storages/{{ host_id }}/{{ pool.name }}"><strong>{{ pool.name }}</strong></a>
+                                </div>
+                                <div class="card-body bg-transparent">
+                                    <p>{% i18n "Type" %}: {{ pool.type|upper }}</p>
+
+                                    <p>{% i18n "Size" %}: {{ pool.size }}<!--|filesizeformat--></p>
+
+                                    <p>{% i18n "Volumes" %}: {{ pool.volumeCount }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
     </div>
 
     <!-- Modal Storage pool -->
-    <div class="modal fade" id="AddStgPool" tabindex="-1" role="dialog" aria-labelledby="AddStgPoolLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="AddStgPool" tabindex="-1" role="dialog" aria-labelledby="AddStgPoolLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">{% i18n "Create Storage Pool" %}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="tabbable">
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a href="#1" data-toggle="tab">{% i18n "DIR" %}</a>
-                        </li>
-                        <li><a href="#2" data-toggle="tab">{% i18n "LVM" %}</a></li>
-                        <li><a href="#3" data-toggle="tab">{% i18n "CEPH" %}</a></li>
-                        <li><a href="#4" data-toggle="tab">{% i18n "NETFS" %}</a></li>
-                        <li><a href="#5" data-toggle="tab">{% i18n "ISO" %}</a></li>
-                    </ul>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="1">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="#DIR" data-toggle="tab">{% i18n "DIR" %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#LVM" data-toggle="tab">{% i18n "LVM" %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#CEPH" data-toggle="tab">{% i18n "CEPH" %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#NETFS" data-toggle="tab">{% i18n "NETFS" %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ISO" data-toggle="tab">{% i18n "ISO" %}</a></li>
+                </ul>                       
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane active" id="DIR">
                         <form class="form-horizontal" method="post" action="" role="form">{{ csrf_token }}
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">{% i18n "Type" %}</label>
@@ -119,7 +120,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane" id="2">
+                    <div class="tab-pane" id="LVM">
                         <form class="form-horizontal" method="post" action="" role="form">{{ csrf_token }}
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">{% i18n "Type" %}</label>
@@ -153,7 +154,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane" id="3">
+                    <div class="tab-pane" id="CEPH">
                         <form class="form-horizontal" method="post" action="" role="form">{{ csrf_token }}
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">{% i18n "Type" %}</label>
@@ -223,7 +224,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane" id="4">
+                    <div class="tab-pane" id="NETFS">
                         <form class="form-horizontal" method="post" action="" role="form">{{ csrf_token }}
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">{% i18n "Type" %}</label>
@@ -286,7 +287,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane" id="5">
+                    <div class="tab-pane" id="ISO">
                         <form class="form-horizontal" method="post" action="" role="form">{{ csrf_token }}
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">{% i18n "Name" %}</label>
@@ -319,5 +320,4 @@
         </div>
         <!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    {% include 'sidebar_close.html' %}
 {% endblock %}

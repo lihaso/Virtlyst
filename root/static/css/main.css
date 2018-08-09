@@ -213,3 +213,31 @@ p {
 #viewXMLpre .pre-scrollable {
     width: 100%;
 }
+
+.icon-bar{
+    flex-wrap: nowrap;
+}
+
+.icon-bar button,
+.icon-bar i{
+    border: 0;
+    background-color: transparent;
+    margin-left: 0.25rem;
+}
+
+.icon-bar form button:hover,
+.icon-bar i:hover{
+    cursor: pointer;
+    color: #555;
+}
+
+.icon-bar form{
+    display: inline-block;
+}
+
+.site-title h1,
+.site-title h2,
+.site-title h3,
+.site-title h4{
+    margin-bottom: 0;
+}
