@@ -42,29 +42,31 @@
                 <a href="#AddStgPool" class="btn btn-success" data-toggle="modal"><i class="fas fa-plus"></i></a> 
             </div>
         </div>
-        <div class="section"> 
-            {% if not storages.size %}
-                <div class="well">
-                    <h4>{% i18n "You do not have any storage pools" %}</h4>
-                </div>
-            {% else %}
-                <div class="row" role="main">
-                    {% for pool in storages %}
-                        <div class="col-xs-12 col-sm-4">
-                            <div class="card card-data">
-                                <div class="card-header {% if pool.active %}alert-success{% else %}alert-danger{% endif %}">
-                                    <a class="{% if pool.active %}alert-success{% else %}alert-danger{% endif %}" href="/storages/{{ host_id }}/{{ pool.name }}"><strong>{{ pool.name }}</strong></a>
-                                </div>
-                                <div class="card-body bg-transparent">
-                                    <p>{% i18n "Type" %}: {{ pool.type|upper }}</p>
+        <div class="row"> 
+            {% if storages.size %}
+                {% for pool in storages %}
+                    <div class="col-12 col-md-6 col-xl-4 mb-4">
+                        <div class="card card-data">
+                            <div class="card-header {% if pool.active %}alert-success{% else %}alert-danger{% endif %}">
+                                <a class="{% if pool.active %}alert-success{% else %}alert-danger{% endif %}" href="/storages/{{ host_id }}/{{ pool.name }}">
+                                    <strong>{{ pool.name }}</strong>
+                                </a>
+                            </div>
+                            <div class="card-body bg-transparent">
+                                <p>{% i18n "Type" %}: {{ pool.type|upper }}</p>
 
-                                    <p>{% i18n "Size" %}: {{ pool.size }}<!--|filesizeformat--></p>
+                                <p>{% i18n "Size" %}: {{ pool.size }}<!--|filesizeformat--></p>
 
-                                    <p>{% i18n "Volumes" %}: {{ pool.volumeCount }}</p>
-                                </div>
+                                <p>{% i18n "Volumes" %}: {{ pool.volumeCount }}</p>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-sm-12">
+                    <div class="well">
+                        <h4>{% i18n "You do not have any storage pools" %}</h4>
+                    </div>
                 </div>
             {% endif %}
         </div>
